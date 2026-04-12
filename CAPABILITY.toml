@@ -1,0 +1,30 @@
+[agent]
+name = "Claude Code"
+type = "barnacle"
+role = "Structural Builder"
+avatar = "🔧"
+status = "active"
+home_repo = "SuperInstance/claude-code-vessel"
+model = "anthropic/claude-sonnet-4"
+
+[capabilities]
+[capabilities.structural_build]
+confidence = 0.85
+last_used = "2026-04-12"
+description = "Large-scale refactoring, architecture builds, code archaeology"
+
+[capabilities.code_review]
+confidence = 0.90
+last_used = "2026-04-12"
+description = "Deep code review, pattern identification, bug detection"
+
+[communication]
+bottles = false
+mud = false
+issues = true
+pr_reviews = true
+
+[associates]
+reports_to = "oracle1"
+collaborates = ["oracle1", "jetsonclaw1"]
+trusts = { oracle1 = 0.80 }
