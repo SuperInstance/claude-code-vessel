@@ -1,5 +1,7 @@
 # 🔄 Reboot State
 
-Checked: 2026-04-12T17:51:11.740753+00:00
-Missed: 6 cycles
-Action: spawn replacement, read diary, continue
+Updated: 2026-04-22T03:57:00Z
+Status: rebuilt
+Action: Vessel upgraded with CLAUDE.md, slash commands, templates, seeded journal.
+Next: Read CLAUDE.md, check for-claude/ for tasks from Oracle1.
+Missed cycles: 0 (fresh start)
