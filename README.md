@@ -1,53 +1,73 @@
-# 🏗️ Claude Code Vessel
+# claude-code-vessel — Containerized Execution for Code Agents
 
-Structural builder of the Cocapn Fleet. Heavy construction, refactoring, scaffolding, and bulk generation.
+**Structural builder of the Cocapn Fleet. Containerized runtimes, sandboxed execution, checkpoints.**
 
-## Quick Start (for Claude Code)
-1. Read `CLAUDE.md` — who you are and how to work
-2. Read `IDENTITY.md` — vessel name and strengths
-3. Check `for-claude/` for active tasks
-4. Read `JOURNAL.md` for accumulated fleet lessons
+## What This Gives You
 
-## Fleet Context
-- **Oracle1** 🔮 — Coordinator, architecture, services
-- **Forgemaster** ⚒️ — Architect, constraint theory, Rust
-- **JetsonClaw1** ⚡ — Edge operator, TensorRT, bare metal
-- **CCC** 🎭 — Designer, play-tester, trend spotter
+- **Vessels** — managed execution environments with lifecycle states (CREATING → READY → RUNNING → STOPPED)
+- **Containers** — resource-limited isolation with CPU, memory, and time constraints
+- **Multi-language runtimes** — Python, Rust, TypeScript, Go, Shell execution
+- **Sandbox policies** — configurable security: network access, filesystem access, execution limits
+- **Checkpoints** — save and restore vessel state for resumable work
 
-## Structure
-```
-CLAUDE.md          ← Native Claude Code hook (read on every session)
-IDENTITY.md        ← Who you are
-CHARTER.md         ← Mission and operating model
-JOURNAL.md         ← Accumulated lessons (grows over time)
-TOOLS.md           ← Fleet tool reference
-BOOTCAMP.md        ← Quick start guide
-CAPABILITY.toml    ← Machine-readable capabilities
-REBOOT-STATE.md    ← Last known state (auto-updated)
+## Quick Start
 
-.claude/commands/  ← Slash commands
-  fleet-task.md    ← Execute a task from for-claude/
-  submit-work.md   ← Package and report completed work
-  play-test.md     ← Test crab-trap prompts against live MUD
+```python
+from claude_code_vessel import Vessel, Container, Runtime, Sandbox, SandboxPolicy
 
-for-claude/        ← Task assignments (from Oracle1)
-  templates/       ← Reusable task templates
-from-fleet/        ← Fleet communications
-for-fleet/         ← Outbound to fleet
-message-in-a-bottle/ ← Bottle protocol
-scripts/           ← Utility scripts
-```
+# Create a sandboxed vessel
+policy = SandboxPolicy(
+    allow_network=False,
+    allow_filesystem_write=True,
+    max_execution_time_seconds=300,
+    max_memory_mb=512,
+)
+vessel = Vessel(
+    name="readme-rewriter",
+    container=Container(runtime=Runtime.PYTHON, resource_limits=ResourceLimits(memory_mb=512)),
+    sandbox=Sandbox(policy=policy),
+)
 
-## The Git-Agent Standard
-This vessel follows the [Git-Agent Standard v2.0](GIT-AGENT-STANDARD.md):
-```
-PULL → BOOT → WORK → LEARN → PUSH → SLEEP
+# Run code in isolation
+vessel.start()
+result = vessel.execute("print('Hello from vessel')")
+print(result.output)  # "Hello from vessel"
+
+# Checkpoint and restore
+vessel.checkpoint("after-setup")
+vessel.stop()
+# Later...
+vessel.restore("after-setup")
 ```
 
-The repo IS the agent. Commits are heartbeats. Push often.
+## API Reference
 
-## 20 Domains We Build For
-cocapn.ai · dmlog.ai · fishinglog.ai · playerlog.ai · luciddreamer.ai · makerlog.ai · lucineer.com · activeledger.ai · businesslog.ai · reallog.ai · studylog.ai · personallog.ai · deckboss.ai · capitaine.ai · superinstance.ai · purplepincher.org · cocapn.com · capitaineai.com · deckboss.net · activelog.ai
+### `Vessel(name, container, sandbox=None)`
+Managed execution environment with lifecycle management.
 
-## License
-MIT
+### `Container(runtime, resource_limits)`
+`Runtime`: PYTHON, RUST, TYPESCRIPT, GO, SHELL
+`ResourceLimits`: cpu_cores, memory_mb, disk_mb, time_seconds
+
+### `Sandbox(policy=SandboxPolicy(...))`
+`SandboxPolicy`: allow_network, allow_filesystem_write, allow_subprocess, max_execution_time_seconds, max_memory_mb
+
+### `CheckpointManager`
+Save/restore vessel state snapshots.
+
+## How It Fits
+
+The heavy construction vessel of the [SuperInstance fleet](https://github.com/SuperInstance). Handles refactoring, scaffolding, bulk generation, and any work that needs isolated execution.
+
+- **[cocapn](https://github.com/SuperInstance/cocapn)** — Core agent infrastructure
+- **[branch-sandbox](https://github.com/SuperInstance/branch-sandbox)** — Branch-level isolation
+- **[cicd-agent](https://github.com/SuperInstance/cicd-agent)** — CI/CD pipeline (dispatches to vessels)
+- **[cartridge-agent](https://github.com/SuperInstance/cartridge-agent)** — Swappable behavior cartridges
+
+## Testing
+
+```bash
+pytest tests/
+```
+
+Python 3.10+. MIT license.
